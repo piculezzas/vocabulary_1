@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocabulary</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#fff; --ink:#1f2a44; --muted:#5b6785;
+    --brand:#2f6fed; --brand-d:#1f55c4; --ok:#1e9e5a; --okbg:#e3f6ec;
+    --bad:#d6453d; --badbg:#fde8e6; --warn:#f2a900; --line:#dfe5f0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;line-height:1.4}
+  .wrap{max-width:760px;margin:0 auto;padding:16px 14px 40px}
+  header{text-align:center;padding:10px 0 6px}
+  h1{margin:0;font-size:1.7rem}
+  .sub{color:var(--muted);margin:4px 0 0}
+  .menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+  .tile{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:16px;text-align:left;cursor:pointer;font:inherit;color:inherit;transition:.15s}
+  .tile:hover,.tile:focus-visible{border-color:var(--brand);transform:translateY(-2px);outline:none}
+  .tile .ic{font-size:2rem}
+  .tile b{display:block;font-size:1.1rem;margin-top:4px}
+  .tile span{color:var(--muted);font-size:.92rem}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 14px}
+  .btn{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:11px 18px;font:inherit;font-weight:bold;cursor:pointer}
+  .btn:hover{background:var(--brand-d)}
+  .btn.ghost{background:#fff;color:var(--brand);border:2px solid var(--brand)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .progress{flex:1;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+  .progress i{display:block;height:100%;background:var(--brand);width:0;transition:.3s}
+  .panel{background:var(--card);border-radius:18px;padding:20px;border:2px solid var(--line)}
+  .emoji{font-size:4rem;text-align:center;line-height:1.1}
+  .q{font-size:1.25rem;text-align:center;margin:8px 0 16px}
+  .q em{font-style:normal;color:var(--brand);font-weight:bold}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opt{background:#fff;border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;font-size:1.1rem;cursor:pointer;color:inherit}
+  .opt:hover:not(:disabled){border-color:var(--brand)}
+  .opt.ok{background:var(--okbg);border-color:var(--ok)}
+  .opt.bad{background:var(--badbg);border-color:var(--bad)}
+  input.txt{width:100%;font:inherit;font-size:1.3rem;text-align:center;padding:12px;border:2px solid var(--line);border-radius:12px}
+  input.txt:focus{outline:none;border-color:var(--brand)}
+  .fb{min-height:48px;margin-top:14px;text-align:center;font-size:1.05rem}
+  .fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
+  .row{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  /* flashcards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+  .fc{perspective:700px;height:170px;cursor:pointer;background:none;border:0;padding:0;font:inherit;color:inherit}
+  .fc .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .fc.flip .in{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;border:2px solid var(--line);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px}
+  .face.back{transform:rotateY(180deg);background:#eef3ff;border-color:var(--brand)}
+  .face .big{font-size:2.4rem}
+  .face .w{font-size:1.3rem;font-weight:bold}
+  .face .de{color:var(--muted);font-size:.9rem}
+  .face .pl{font-size:1.4rem;font-weight:bold;color:var(--brand)}
+  .face .irr{background:var(--warn);color:#4a3500;border-radius:8px;padding:1px 8px;font-size:.75rem;font-weight:bold}
+  .spk{margin-top:4px;background:none;border:0;font-size:1.2rem;cursor:pointer}
+  .hint{color:var(--muted);text-align:center;margin:0 0 10px;font-size:.95rem}
+  /* table */
+  table{width:100%;border-collapse:collapse;margin-top:16px;background:#fff;border-radius:12px;overflow:hidden}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#eef3ff}
+  td.irr{color:var(--bad);font-weight:bold}
+  /* match */
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .match .opt{padding:11px;font-size:1.05rem}
+  .match .opt.sel{border-color:var(--brand);background:#eef3ff}
+  .match .opt.done{background:var(--okbg);border-color:var(--ok);opacity:.8}
+  .stars{font-size:2.4rem;text-align:center}
+  .score{font-size:1.6rem;text-align:center;font-weight:bold;margin:6px 0}
+  .wrong li{margin:4px 0}
+  .hidden{display:none}
+  @media (max-width:420px){.opts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Vocabulary</h1>
+    <p class="sub">Parts of the Body · Einzahl und Mehrzahl</p>
+  </header>
+
+  <!-- MENU -->
+  <section id="menu">
+    <div class="menu">
+      <button class="tile" data-go="learn"><div class="ic">🃏</div><b>1 · Lernkarten</b><span>Karte anklicken: Wort, Mehrzahl und Aussprache</span></button>
+      <button class="tile" data-go="words"><div class="ic">🔎</div><b>2 · Welches Wort?</b><span>Bild und deutsches Wort – wähle das englische Wort</span></button>
+      <button class="tile" data-go="pluralmc"><div class="ic">✌️</div><b>3 · Mehrzahl auswählen</b><span>one foot – two …? Wähle die richtige Form</span></button>
+      <button class="tile" data-go="write"><div class="ic">✏️</div><b>4 · Mehrzahl schreiben</b><span>Schreibe die Mehrzahl selbst</span></button>
+      <button class="tile" data-go="match"><div class="ic">🧩</div><b>5 · Paare finden</b><span>Verbinde Einzahl und Mehrzahl</span></button>
+      <button class="tile" data-go="mix"><div class="ic">🏆</div><b>6 · Alles gemischt</b><span>10 Fragen aus allen Spielen – Test-Challenge</span></button>
+    </div>
+  </section>
+
+  <!-- LEARN -->
+  <section id="learn" class="hidden">
+    <div class="topbar"><button class="btn ghost" data-go="menu">← Menü</button><b>Lernkarten</b><span></span></div>
+    <p class="hint">Tippe auf eine Karte, um sie umzudrehen. Mit 🔊 hörst du das Wort.</p>
+    <div class="cards" id="cards"></div>
+    <table id="tbl"></table>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hidden">
+    <div class="topbar"><button class="btn ghost" data-go="menu">← Menü</button><div class="progress"><i id="bar"></i></div><b id="count"></b></div>
+    <div class="panel" id="qbox"></div>
+  </section>
+
+  <!-- MATCH -->
+  <section id="match" class="hidden">
+    <div class="topbar"><button class="btn ghost" data-go="menu">← Menü</button><b>Paare finden</b><b id="mscore"></b></div>
+    <p class="hint">Tippe links ein Wort (one) und rechts die passende Mehrzahl (two).</p>
+    <div class="panel">
+      <div class="match" id="mgrid"></div>
+      <div class="fb" id="mfb"></div>
+      <div class="row"><button class="btn ghost" id="mre">Neu mischen</button></div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" class="hidden">
+    <div class="panel">
+      <div class="stars" id="stars"></div>
+      <div class="score" id="rscore"></div>
+      <p class="q" id="rmsg"></p>
+      <div id="rwrong"></div>
+      <div class="row">
+        <button class="btn" id="again">Nochmal</button>
+        <button class="btn ghost" id="retryw">Nur Fehler wiederholen</button>
+        <button class="btn ghost" data-go="menu">Menü</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const WORDS = [
+  {en:"foot",     pl:"feet",      de:"Fuss",     em:"🦶", irr:true,  wrong:["foots","feets","footes"]},
+  {en:"leg",      pl:"legs",      de:"Bein",     em:"🦵", irr:false, wrong:["leges","leggs","legies"]},
+  {en:"shoulder", pl:"shoulders", de:"Schulter", em:"🤷", irr:false, wrong:["shoulderes","shouldres","shoulderies"]},
+  {en:"toe",      pl:"toes",      de:"Zeh",      em:"🦶", irr:false, wrong:["toees","toies","toess"], sub:"👣"},
+  {en:"eye",      pl:"eyes",      de:"Auge",     em:"👁️", irr:false, wrong:["eyees","eyies","eyess"]},
+  {en:"ear",      pl:"ears",      de:"Ohr",      em:"👂", irr:false, wrong:["eares","eers","earies"]},
+  {en:"mouth",    pl:"mouths",    de:"Mund",     em:"👄", irr:false, wrong:["mouthes","mouthies","meeth"]},
+  {en:"tooth",    pl:"teeth",     de:"Zahn",     em:"🦷", irr:true,  wrong:["toothes","tooths","teeths"]},
+  {en:"bone",     pl:"bones",     de:"Knochen",  em:"🦴", irr:false, wrong:["bonees","bonies","boness"]},
+  {en:"body",     pl:"bodies",    de:"Körper",   em:"🧍", irr:true,  wrong:["bodys","bodyes","bodees"]}
+];
+// Emoji für "toe": Zeh = Fuss-Emoji plus Hinweis, damit es nicht mit "foot" verwechselt wird
+WORDS[3].em = "☝️🦶";
+
+const $ = s => document.querySelector(s);
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const sections = ["menu","learn","quiz","match","result"];
+function show(id){ sections.forEach(s => $("#"+s).classList.toggle("hidden", s!==id)); window.scrollTo(0,0); }
+function speak(t){ try{ const u=new SpeechSynthesisUtterance(t); u.lang="en-GB"; u.rate=.85; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} }
+
+/* ---------- LEARN ---------- */
+function buildLearn(){
+  $("#cards").innerHTML = WORDS.map((w,i)=>`
+    <div class="fc" data-i="${i}" role="button" tabindex="0" aria-label="${w.en}">
+      <div class="in">
+        <div class="face"><div class="big">${w.em}</div><div class="w">${w.en}</div><div class="de">${w.de}</div>
+          <button class="spk" data-say="${w.en}" aria-label="Aussprache">🔊</button></div>
+        <div class="face back"><div class="de">one ${w.en}</div><div class="pl">two ${w.pl}</div>
+          ${w.irr?'<span class="irr">Achtung: besondere Form!</span>':''}
+          <button class="spk" data-say="${w.pl}" aria-label="Aussprache Mehrzahl">🔊</button></div>
+      </div>
+    </div>`).join("");
+  $("#tbl").innerHTML = `<tr><th>Deutsch</th><th>Einzahl</th><th>Mehrzahl</th></tr>` +
+    WORDS.map(w=>`<tr><td>${w.de}</td><td>${w.en}</td><td class="${w.irr?'irr':''}">${w.pl}</td></tr>`).join("");
+}
+$("#cards").addEventListener("click", e=>{
+  const sp = e.target.closest(".spk");
+  if (sp){ e.stopPropagation(); speak(sp.dataset.say); return; }
+  const c = e.target.closest(".fc"); if (c) c.classList.toggle("flip");
+});
+$("#cards").addEventListener("keydown", e=>{
+  if ((e.key==="Enter"||e.key===" ") && e.target.classList.contains("fc")){ e.preventDefault(); e.target.classList.toggle("flip"); }
+});
+
+/* ---------- QUIZ ---------- */
+let mode="", Q=[], idx=0, score=0, wrongList=[], lastMode="";
+
+function makeQ(type, w){
+  if (type==="words"){
+    const opts = shuffle([w.en, ...shuffle(WORDS.filter(x=>x!==w)).slice(0,3).map(x=>x.en)]);
+    return {type, w, html:`<div class="emoji">${w.em}</div><div class="q">Wie heisst <em>${w.de}</em> auf Englisch?</div>`, opts, answer:w.en};
+  }
+  if (type==="pluralmc"){
+    const opts = shuffle([w.pl, ...w.wrong]);
+    return {type, w, html:`<div class="emoji">${w.em}</div><div class="q">one <em>${w.en}</em> – two <em>…</em> ?</div>`, opts, answer:w.pl};
+  }
+  return {type:"write", w, html:`<div class="emoji">${w.em}</div><div class="q">one <em>${w.en}</em> (${w.de}) – two <em>…</em> ?<br><small style="color:var(--muted)">Schreibe die Mehrzahl.</small></div>`, answer:w.pl};
+}
+function buildQs(m){
+  const base = shuffle(WORDS);
+  if (m==="mix"){
+    const types = ["words","pluralmc","write"];
+    return base.map((w,i)=>makeQ(types[i%3], w));
+  }
+  return base.map(w=>makeQ(m, w));
+}
+function startQuiz(m, qs){
+  mode = m; lastMode = m;
+  Q = qs || buildQs(m); idx = 0; score = 0; wrongList = [];
+  show("quiz"); renderQ();
+}
+function renderQ(){
+  const q = Q[idx];
+  $("#count").textContent = (idx+1)+" / "+Q.length;
+  $("#bar").style.width = (idx/Q.length*100)+"%";
+  let body = q.html;
+  if (q.type==="write"){
+    body += `<input class="txt" id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="two …">
+             <div class="row"><button class="btn" id="check">Prüfen</button><button class="btn ghost" id="hintb">Tipp</button></div>`;
+  } else {
+    body += `<div class="opts">` + q.opts.map(o=>`<button class="opt" data-v="${o}">${o}</button>`).join("") + `</div>`;
+  }
+  body += `<div class="fb" id="fb" aria-live="polite"></div><div class="row"><button class="btn hidden" id="next">Weiter →</button></div>`;
+  $("#qbox").innerHTML = body;
+  if (q.type==="write"){
+    const inp = $("#ans"); inp.focus();
+    inp.addEventListener("keydown", e=>{ if(e.key==="Enter") checkWrite(); });
+    $("#check").onclick = checkWrite;
+    $("#hintb").onclick = ()=>{ $("#fb").className="fb"; $("#fb").textContent = "Tipp: Die Mehrzahl beginnt mit «"+q.answer[0]+"» und hat "+q.answer.length+" Buchstaben."; };
+  } else {
+    document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(b));
+  }
+  $("#next").onclick = nextQ;
+}
+function finishAnswer(ok){
+  const q = Q[idx];
+  if (ok) score++; else wrongList.push(q);
+  const fb = $("#fb");
+  fb.className = "fb " + (ok?"ok":"bad");
+  fb.innerHTML = ok ? "✅ Richtig! <b>one "+q.w.en+" – two "+q.w.pl+"</b>"
+                    : "❌ Leider falsch. Richtig ist: <b>"+q.answer+"</b> (one "+q.w.en+" – two "+q.w.pl+")";
+  speak(q.type==="words" ? q.w.en : q.w.pl);
+  const n = $("#next"); n.classList.remove("hidden");
+  n.textContent = idx===Q.length-1 ? "Ergebnis ansehen" : "Weiter →"; n.focus();
+}
+function pick(b){
+  const q = Q[idx]; const ok = b.dataset.v===q.answer;
+  document.querySelectorAll(".opt").forEach(x=>{
+    x.disabled = true;
+    if (x.dataset.v===q.answer) x.classList.add("ok");
+  });
+  if (!ok) b.classList.add("bad");
+  finishAnswer(ok);
+}
+function checkWrite(){
+  const inp = $("#ans"); if (inp.disabled) return;
+  const v = inp.value.trim().toLowerCase();
+  if (!v){ $("#fb").className="fb bad"; $("#fb").textContent="Bitte schreibe zuerst eine Antwort."; return; }
+  inp.disabled = true; $("#check").disabled = true; $("#hintb").disabled = true;
+  const ok = v===Q[idx].answer;
+  inp.style.borderColor = ok ? "var(--ok)" : "var(--bad)";
+  finishAnswer(ok);
+}
+function nextQ(){
+  idx++;
+  if (idx>=Q.length) return showResult();
+  renderQ();
+}
+function showResult(){
+  $("#bar").style.width="100%";
+  const n = Q.length, pct = score/n;
+  const st = pct===1 ? 3 : pct>=.7 ? 2 : pct>=.4 ? 1 : 0;
+  $("#stars").textContent = "⭐".repeat(st) + "☆".repeat(3-st);
+  $("#rscore").textContent = score+" von "+n+" richtig";
+  $("#rmsg").textContent = pct===1 ? "Perfekt! Du kennst alle Wörter. 🎉" : pct>=.7 ? "Sehr gut! Schau dir die Fehler noch einmal an." : "Übe noch ein bisschen mit den Lernkarten – du schaffst das! 💪";
+  $("#rwrong").innerHTML = wrongList.length ? "<b>Das solltest du noch üben:</b><ul class='wrong'>"+wrongList.map(q=>`<li>${q.w.em} one <b>${q.w.en}</b> – two <b>${q.w.pl}</b></li>`).join("")+"</ul>" : "";
+  $("#retryw").classList.toggle("hidden", !wrongList.length);
+  show("result");
+}
+$("#again").onclick = ()=> lastMode==="match" ? startMatch() : startQuiz(lastMode);
+$("#retryw").onclick = ()=> startQuiz(lastMode, shuffle(wrongList.map(q=>makeQ(q.type, q.w))));
+
+/* ---------- MATCH ---------- */
+let selL=null, selR=null, found=0, tries=0, errs=0;
+function startMatch(){
+  lastMode="match"; found=0; tries=0; errs=0; selL=selR=null;
+  const left = shuffle(WORDS), right = shuffle(WORDS);
+  $("#mgrid").innerHTML =
+    `<div style="display:grid;gap:8px">` + left.map(w=>`<button class="opt" data-side="L" data-k="${w.en}">one ${w.en}</button>`).join("") + `</div>` +
+    `<div style="display:grid;gap:8px">` + right.map(w=>`<button class="opt" data-side="R" data-k="${w.en}">two ${w.pl}</button>`).join("") + `</div>`;
+  $("#mfb").textContent=""; $("#mscore").textContent="0 / "+WORDS.length;
+  show("match");
+}
+$("#mgrid").addEventListener("click", e=>{
+  const b = e.target.closest(".opt"); if (!b || b.classList.contains("done")) return;
+  const side = b.dataset.side;
+  document.querySelectorAll('.opt[data-side="'+side+'"]').forEach(x=>x.classList.remove("sel"));
+  b.classList.add("sel");
+  if (side==="L") selL=b; else selR=b;
+  if (selL && selR){
+    if (selL.dataset.k===selR.dataset.k){
+      [selL,selR].forEach(x=>{x.classList.remove("sel");x.classList.add("done");x.disabled=true;});
+      found++; $("#mscore").textContent=found+" / "+WORDS.length;
+      $("#mfb").className="fb ok"; $("#mfb").textContent="✅ Richtig!";
+      speak(selR.textContent.replace("two ",""));
+      selL=selR=null;
+      if (found===WORDS.length){
+        setTimeout(()=>{
+          score = Math.max(0, WORDS.length-errs); Q = WORDS.map(()=>0); wrongList=[];
+          showMatchResult();
+        },600);
+      }
+    } else {
+      errs++;
+      $("#mfb").className="fb bad"; $("#mfb").textContent="❌ Das passt nicht – versuche es noch einmal.";
+      const a=selL,c=selR; setTimeout(()=>{a.classList.remove("sel");c.classList.remove("sel");},350);
+      selL=selR=null;
+    }
+  }
+});
+function showMatchResult(){
+  const pct = score/WORDS.length;
+  const st = errs===0 ? 3 : errs<=3 ? 2 : 1;
+  $("#stars").textContent = "⭐".repeat(st)+"☆".repeat(3-st);
+  $("#rscore").textContent = "Alle Paare gefunden! Fehlversuche: "+errs;
+  $("#rmsg").textContent = errs===0 ? "Perfekt, kein einziger Fehler! 🎉" : "Gut gemacht! Versuche es nochmal und finde alle Paare ohne Fehler.";
+  $("#rwrong").innerHTML=""; $("#retryw").classList.add("hidden");
+  show("result");
+}
+$("#mre").onclick = startMatch;
+
+/* ---------- NAV ---------- */
+document.addEventListener("click", e=>{
+  const g = e.target.closest("[data-go]"); if(!g) return;
+  const t = g.dataset.go;
+  if (t==="menu") show("menu");
+  else if (t==="learn"){ buildLearn(); show("learn"); }
+  else if (t==="match") startMatch();
+  else startQuiz(t);
+});
+</script>
+</body>
+</html>
